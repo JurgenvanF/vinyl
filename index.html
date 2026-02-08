@@ -1,50 +1,10 @@
 <!doctype html>
 <html lang="nl">
   <head>
-    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
     <title>Mijn Vinyl Collectie</title>
     <link rel="stylesheet" href="style.css" />
-
-    <!-- Firebase SDKs -->
-    <script type="module">
-      // Import the functions you need from the SDKs
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-
-      import {
-        getFirestore,
-        collection,
-        addDoc,
-        deleteDoc,
-        getDocs,
-        doc,
-        updateDoc,
-      } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
-
-      // Your Firebase configuration
-      const firebaseConfig = {
-        apiKey: "AIzaSyC5EJrxQ3evy6Yq3wjJha4Fkvgbl_U-z4g",
-        authDomain: "vinyl-app-2c001.firebaseapp.com",
-        databaseURL:
-          "https://vinyl-app-2c001-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "vinyl-app-2c001",
-        storageBucket: "vinyl-app-2c001.firebasestorage.app",
-        messagingSenderId: "517868864549",
-        appId: "1:517868864549:web:455759e2a12e9aeb692bcc",
-      };
-
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-      const vinylCollection = collection(db, "vinyl");
-
-      // Expose Firebase objects globally so app.js can use them
-      window.firebaseApp = app;
-      window.db = db;
-      window.vinylCollection = vinylCollection;
-      window.firebaseImports = { addDoc, deleteDoc, getDocs, doc, updateDoc };
-      console.log("Firebase initialized successfully");
-    </script>
   </head>
   <body>
     <h1>🎶 Mijn Vinyl Collectie</h1>
@@ -76,7 +36,7 @@
       </p>
     </div>
 
-    <!-- Voeg Vinyl Toe Modal -->
+    <!-- Add Vinyl Modal -->
     <div
       id="modal"
       class="modal"
@@ -108,7 +68,6 @@
       </div>
     </div>
 
-    <!-- Your App Script -->
-    <script type="module" src="app.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

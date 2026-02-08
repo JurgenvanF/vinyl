@@ -1,11 +1,3 @@
-import {
-  addDoc,
-  deleteDoc,
-  getDocs,
-  doc,
-  updateDoc,
-} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
-
 const monthsNL = [
   "januari",
   "februari",
@@ -21,44 +13,11 @@ const monthsNL = [
   "december",
 ];
 
-// Load from localStorage first
 let collection = JSON.parse(localStorage.getItem("vinylCollection")) || [];
 let currentAudio = null;
 
-// Simple save to localStorage
 function saveCollection() {
   localStorage.setItem("vinylCollection", JSON.stringify(collection));
-  // Sync to Firestore in background (non-blocking)
-  syncToFirestore().catch((error) => {
-    console.error("Background Firestore sync failed:", error);
-  });
-}
-
-// Background Firestore sync (doesn't block the UI)
-async function syncToFirestore() {
-  try {
-    const db = window.db;
-    if (!db) return; // Firebase not initialized yet
-
-    const vinylCollection = window.vinylCollection;
-    if (!vinylCollection) return;
-
-    // Clear and resync all documents
-    const existingDocs = await getDocs(vinylCollection);
-    const deletePromises = existingDocs.docs.map((docSnap) =>
-      deleteDoc(doc(db, "vinyl", docSnap.id)),
-    );
-    await Promise.all(deletePromises);
-
-    // Add all albums
-    const addPromises = collection.map((album) =>
-      addDoc(vinylCollection, album),
-    );
-    await Promise.all(addPromises);
-    console.log("Successfully synced to Firestore");
-  } catch (error) {
-    console.error("Firestore sync error:", error);
-  }
 }
 
 function displayCollection(list = collection) {
@@ -130,7 +89,7 @@ function filterCollection() {
 }
 
 function removeFromCollection(index) {
-  const removedItem = collection.splice(index, 1)[0];
+  collection.splice(index, 1);
   saveCollection();
   filterCollection();
 }
@@ -213,9 +172,6 @@ function addToCollection(artist, album, year, cover, collectionId) {
       saveCollection();
       closeModal();
       filterCollection();
-    })
-    .catch((error) => {
-      console.error("Error fetching tracks:", error);
     });
 }
 
@@ -318,19 +274,4 @@ function closeAlbumModal() {
   });
 }
 
-// Export functions to window immediately for HTML event handlers
-window.saveCollection = saveCollection;
-window.displayCollection = displayCollection;
-window.filterCollection = filterCollection;
-window.removeFromCollection = removeFromCollection;
-window.openModal = openModal;
-window.closeModal = closeModal;
-window.searchAlbums = searchAlbums;
-window.addToCollection = addToCollection;
-window.escapeQuotes = escapeQuotes;
-window.openAlbumDetails = openAlbumDetails;
-window.closeAlbumModal = closeAlbumModal;
-
-// Initialize app - display collection from localStorage
-console.log("App initialized with", collection.length, "items");
 displayCollection();
