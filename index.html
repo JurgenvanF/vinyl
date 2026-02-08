@@ -1,6 +1,31 @@
 <!doctype html>
 <html lang="nl">
   <head>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+      import {
+        getFirestore,
+        doc,
+        setDoc,
+        getDocs,
+        collection,
+      } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyC5EJrxQ3evy6Yq3wjJha4Fkvgbl_U-z4g",
+        authDomain: "vinyl-app-2c001.firebaseapp.com",
+        databaseURL:
+          "https://vinyl-app-2c001-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "vinyl-app-2c001",
+        storageBucket: "vinyl-app-2c001.firebasestorage.app",
+        messagingSenderId: "517868864549",
+        appId: "1:517868864549:web:455759e2a12e9aeb692bcc",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+    </script>
+
     <link rel="stylesheet" href="style.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="UTF-8" />

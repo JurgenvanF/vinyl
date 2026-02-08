@@ -13,12 +13,7 @@ const monthsNL = [
   "december",
 ];
 
-let collection = JSON.parse(localStorage.getItem("vinylCollection")) || [];
 let currentAudio = null;
-
-function saveCollection() {
-  localStorage.setItem("vinylCollection", JSON.stringify(collection));
-}
 
 function displayCollection(list = collection) {
   const container = document.getElementById("collection");
