@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <title>Mijn Vinyl Collectie</title>
+  </head>
+  <body>
+    <h1>🎶 Mijn Vinyl Collectie</h1>
+
+    <div class="top-bar">
+      <input
+        type="text"
+        id="collectionSearch"
+        placeholder="Zoek in je collectie..."
+        oninput="filterCollection()"
+      />
+      <select
+        class="filter-select"
+        id="collectionFilter"
+        onchange="filterCollection()"
+      >
+        <option value="artist">Artiest</option>
+        <option value="album">Album</option>
+        <option value="year">Jaar</option>
+        <option value="recent">Recent toegevoegd</option>
+      </select>
+      <button class="add-btn" onclick="openModal()">+</button>
+    </div>
+
+    <div class="section">
+      <div id="collection"></div>
+      <p id="emptyMessage" class="muted hidden">
+        Je collectie is leeg. Voeg wat vinyl toe! 🎵
+      </p>
+    </div>
+
+    <!-- Add Vinyl Modal -->
+    <div
+      id="modal"
+      class="modal"
+      onclick="if (event.target === this) closeModal();"
+    >
+      <div class="modal-content">
+        <button class="close-btn" onclick="closeModal()">Sluiten</button>
+        <h2>Voeg Vinyl Toe</h2>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Zoek artiest, album of nummer"
+          oninput="searchAlbums()"
+        />
+        <div id="results" class="grid"></div>
+      </div>
+    </div>
+
+    <!-- Album Details Modal -->
+    <div
+      id="albumModal"
+      class="modal"
+      onclick="if (event.target === this) closeAlbumModal();"
+    >
+      <div class="modal-content album-details">
+        <button class="close-btn" onclick="closeAlbumModal()">Sluiten</button>
+        <div id="albumInfo"></div>
+        <div class="tracklist" id="albumTracks"></div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
