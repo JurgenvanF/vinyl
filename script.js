@@ -20,6 +20,11 @@ function saveCollection() {
   localStorage.setItem("vinylCollection", JSON.stringify(collection));
 }
 
+function getPrimaryArtist(artist) {
+  // Take everything before &, feat., or featuring (case-insensitive)
+  return artist.split(/&|feat\.|featuring/i)[0].trim();
+}
+
 function displayCollection(list = collection) {
   const container = document.getElementById("collection");
   const emptyMsg = document.getElementById("emptyMessage");
@@ -28,48 +33,54 @@ function displayCollection(list = collection) {
   if (list.length === 0) {
     emptyMsg.classList.remove("hidden");
     return;
+  } else {
+    emptyMsg.classList.add("hidden");
   }
-  emptyMsg.classList.add("hidden");
 
   let grouped = {};
   let sortedList = [...list];
 
   if (filter === "artist") {
-    sortedList.sort((a, b) => a.artist.localeCompare(b.artist));
+    sortedList.sort((a, b) =>
+      getPrimaryArtist(a.artist).localeCompare(getPrimaryArtist(b.artist)),
+    );
     sortedList.forEach((item) => {
-      (grouped[item.artist] ??= []).push(item);
+      const primary = getPrimaryArtist(item.artist);
+      if (!grouped[primary]) grouped[primary] = [];
+      grouped[primary].push(item);
     });
   } else if (filter === "year") {
     sortedList.sort((a, b) => (a.year || 0) - (b.year || 0));
     sortedList.forEach((item) => {
-      (grouped[item.year] ??= []).push(item);
+      if (!grouped[item.year]) grouped[item.year] = [];
+      grouped[item.year].push(item);
     });
   } else if (filter === "recent") {
     sortedList.sort((a, b) => b.added - a.added);
-    grouped["Recent toegevoegd"] = sortedList;
+    grouped["Laatst Toegevoegd"] = sortedList;
   } else {
     sortedList.sort((a, b) => a.album.localeCompare(b.album));
-    grouped["Alle albums"] = sortedList;
+    grouped["Alle Albums"] = sortedList;
   }
 
   for (const group in grouped) {
-    if (group !== "Alle albums" && group !== "Recent toegevoegd")
+    if (group !== "Alle Albums" && group !== "Laatst Toegevoegd") {
       container.innerHTML += `<div class="group-label"><span>${group}</span></div>`;
-    else if (group === "Recent toegevoegd")
-      container.innerHTML += `<div class="group-label"><span>Recent toegevoegd</span></div>`;
-
+    } else if (group === "Laatst Toegevoegd") {
+      container.innerHTML += `<div class="group-label"><span>Laatst Toegevoegd</span></div>`;
+    }
     container.innerHTML += `<div class="grid" id="group-${group}"></div>`;
     const groupContainer = document.getElementById(`group-${group}`);
     grouped[group].forEach((item) => {
       groupContainer.innerHTML += `
-            <div class="card" onclick="openAlbumDetails('${escapeQuotes(item.artist)}','${escapeQuotes(item.album)}')">
-              <div class="card-content">
-                <img src="${item.cover}">
-                <p><strong>${item.artist}</strong><br>${item.album} (${item.year})</p>
-              </div>
-              <button class="remove-btn" onclick="removeFromCollection(${collection.indexOf(item)});event.stopPropagation();">Verwijderen</button>
-            </div>
-            `;
+        <div class="card" onclick="openAlbumDetails('${escapeQuotes(item.artist)}','${escapeQuotes(item.album)}')">
+          <div class="card-content">
+            <img src="${item.cover}">
+            <p><strong>${item.artist}</strong><br>${item.album} (${item.year})</p>
+          </div>
+          <button class="remove-btn" onclick="removeFromCollection(${collection.indexOf(item)});event.stopPropagation();">Verwijder</button>
+        </div>
+      `;
     });
   }
 }
